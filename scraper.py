@@ -1,3 +1,4 @@
+import csv
 import requests
 from bs4 import BeautifulSoup
 
@@ -10,6 +11,8 @@ r = requests.get(url)
 # make sure page exists
 if r.status_code == 200:
     html = r.text
+
+# Extract data using BeautifulSoup
 
 soup = BeautifulSoup(html, 'html.parser')
 
@@ -29,4 +32,13 @@ for row in rows:
         data['name'] = str(tds[1].h3.contents[0])
         data['loc'] = str(tds[1].p.contents[0])
         results.append(data)
-print(results)
+
+# Save data to csv file
+
+with open('aussie_biotech.csv', mode='w') as csv_file:
+    fieldnames = ['name', 'url', 'loc']
+    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+    writer.writeheader()
+    for row in results:
+        writer.writerow(row)
