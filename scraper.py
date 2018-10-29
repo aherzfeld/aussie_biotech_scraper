@@ -18,13 +18,15 @@ soup = BeautifulSoup(html, 'html.parser')
 tbody = soup.tbody
 
 results = []
-for tr in tbody.children:
-    print(tr, type(tr))
-    """if tr.a:
-        data = {'name': '', 'url': '', 'loc': ''}
-        data['url'] = (tr.contents)[0].a['href']
-        data['name'] = (tr.contents)[1].h1.contents
-        data['loc'] = (tr.contents)[1].p.contents
-        results.append(data)"""
 
+rows = tbody.find_all('tr')
+
+for row in rows:
+    if row.a:
+        data = {'name': '', 'url': '', 'loc': ''}
+        tds = row.find_all('td')
+        data['url'] = tds[0].a['href']
+        data['name'] = str(tds[1].h3.contents[0])
+        data['loc'] = str(tds[1].p.contents[0])
+        results.append(data)
 print(results)
